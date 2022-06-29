@@ -83,40 +83,42 @@ class Mod:
         
         self.x = np.array(self.x)
         self.c = np.array(self.c)
-        self.s = np.array(self.s) 
+        self.s = np.array(self.s)
+        self.d = np.array([pt/np.linalg.norm(pt) for pt in self.x])
+        #self.r /= max(self.r)
+        self.rd = np.random.uniform(size=(len(self.x), 2))
+        self.rd = np.array([pt/np.linalg.norm(pt) for pt in self.rd])
+        self.b = (self.d + 2. * self.rd)
 
     def move(self, amplitutde):
         return self.x * (1.0 + amplitutde)
 
-    def plot_steady(self, area_factor=15., marker='$\\bigodot$'):
+    def plot_steady(self, saveas, area_factor=15., marker='$\\bigodot$'):
         fig = plt.figure(figsize=(8, 8))
         ax = fig.add_subplot(111)
         ax.axis("off")
         ax.scatter(self.x[:, 0], self.x[:, 1], c=self.c, s=area_factor*self.s, marker=marker)
-        plt.show() 
+        plt.savefig(saveas)
 
     @ut.timer
-    def animate(self, wave, animate_as, area_factor=15., marker='$\\bigodot$'):
+    def animate(self, wave, saveas, area_factor=15., marker='$\\bigodot$', move_factor=10., n_frames=1200):
         fig = plt.figure(figsize=(8, 8))
         ax = fig.add_subplot(111)
-        ax.axis("off")
         x = self.x
-        frame_rate = 24
-        move_frames = [i*frame_rate for i in range(int(wave.duration))]
-        all_frames = list(range(int(wave.duration) * frame_rate))
-        
+        interval = 50
+        all_frames = list(range(n_frames))
+        print('Total frames = {}'.format(len(all_frames)))
         def draw_frame(frame_id):
             ax.clear()
             ax.axis("off")
-            print('working on frame {}'.format(frame_id))
-            a = 0. 
-            if frame_id in move_frames:
-                i = int(frame_id * wave.samplerate/frame_rate) 
-                a = wave.signal[i]
-            ax.scatter((1. + a) * self.x[:, 0], (1. + a) * self.x[:, 1], c=self.c, s=area_factor*self.s, marker=marker)
+            i = int(frame_id * wave.samplerate * interval / 1000.)  
+            a = wave.signal[i]
+            print('working on frame {}, a = {}'.format(frame_id, a), end='\r')
+            y = self.x + move_factor * a * self.b
+            ax.scatter(y[:, 0], y[:, 1], c=self.c, s=area_factor*self.s, marker=marker)
         
-        animation = FuncAnimation(fig=fig, func=draw_frame, frames=range(240), interval=100, repeat=False)
-        animation.save(animate_as, writer='ffmpeg')
+        animation = FuncAnimation(fig=fig, func=draw_frame, frames=all_frames, interval=interval, repeat=False)
+        animation.save(saveas, writer='ffmpeg')
 
 
 class Wave:
