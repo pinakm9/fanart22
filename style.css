@@ -1,12 +1,12 @@
 * {
-    box-sizing: border-box;
+    box-sizing: inherit;
+    padding: 0;
+    margin: 0;
   }
   
   /* Create three unequal columns that floats next to each other */
   .column {
     float: left;
-    padding: 10px;
-    height: 300px; /* Should be removed. Only for demonstration */
   }
   
   .left, .right {
@@ -18,8 +18,25 @@
   }
   
   /* Clear floats after the columns */
-  .row:after {
+  .row{
+    position: relative;
+    left: 5%;
+    top: 5%;
+  }
+
+  /* .row:after {
     content: "";
     display: table;
     clear: both;
-  }
+  } */
+
+  .videoInsert {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* p{
+    font-family: 'Reenie Beanie';
+    font-size: 1.0em;
+} */
