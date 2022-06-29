@@ -1,7 +1,5 @@
 * {
-    box-sizing: inherit;
-    padding: 0;
-    margin: 0;
+    box-sizing: border-box;
   }
   
   /* Create three unequal columns that floats next to each other */
@@ -9,26 +7,23 @@
     float: left;
   }
   
-  .left, .right {
+  .left, .right, .middle {
     width: 33%;
   }
   
-  .middle {
-    width: 33%;
-  }
   
-  /* Clear floats after the columns */
+  /* Clear floats after the columns
   .row{
     position: relative;
     left: 5%;
     top: 5%;
-  }
+  } */
 
-  /* .row:after {
+  .row:after {
     content: "";
     display: table;
     clear: both;
-  } */
+  }
 
   .videoInsert {
     width:100%;
@@ -36,7 +31,21 @@
     object-fit:cover;
 }
 
-/* p{
+p{
     font-family: 'Reenie Beanie';
-    font-size: 1.0em;
-} */
+    font-size: 1.2em;
+    padding: 10px;
+}
+
+#r2{
+    position: absolute;
+    left: 16.5%; 
+}
+
+#r2 > .left, #r2 > .right {
+    width: 35%;
+  }
+
+#r2 > .pad{
+    width: 10%;
+}
